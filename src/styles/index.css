@@ -1,0 +1,3 @@
+/* Aquí meteremos el css global, reset, tipografias... */
+@import './resets.css';
+@import './fonts.css';
