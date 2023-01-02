@@ -1,12 +1,13 @@
 import style from './UserRole.module.css';
 
+const ROLE_STYLES = {
+	teacher: ['Profesor', style.teacher],
+	student: ['Student', style.student],
+	other: ['Otro', style.other]
+};
+
 const UserRole = ({ role }) => {
 	/* Creamos este objeto, para aplicar diferentes estilos a cada role. */
-	const ROLE_STYLES = {
-		teacher: ['Profesor', style.teacher],
-		student: ['Student', style.student],
-		other: ['Otro', style.other]
-	};
 
 	/* En el caso de que sea porfesores o alumno hará destructuring de ROLE_STYLE['Profesor' o 'Alumno'], si no es niguno de esos hará el destructuring de other.
 	 */
