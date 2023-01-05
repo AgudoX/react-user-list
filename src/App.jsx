@@ -2,28 +2,31 @@ import UserList from './components/UserList';
 
 const USERS = [
 	{
+		id: 0,
 		name: 'Javier Agudo Culebras',
 		active: false,
 		role: 'teacher'
 	},
 	{
+		id: 1,
 		name: 'Pablo Castellanos',
 		active: true,
 		role: 'student'
 	},
 	{
+		id: 2,
 		name: 'Luka Dolchi',
 		active: true,
 		role: 'blasd'
+	},
+	{
+		id: 3,
+		name: 'Jose Antonio',
+		active: true,
+		role: 'teacher'
 	}
 ];
-// Covertimos App en un componente pasandolo a mayúscula y devolviendo una función.
-// Lo convertimos en un componente ya que una de las características de estos es que tienen su propio ciclo de vida, y App no es una excepción.
 
-const App = () => (
-	<UserList users={USERS}>
-		<h1>Listado de Usuarios</h1>
-	</UserList>
-);
+const App = () => <UserList initialUsers={USERS} />;
 
 export default App;
