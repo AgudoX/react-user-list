@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { UsersContext } from '../lib/context/UsersContext';
 import style from './UserList.module.css';
 import UsersListFilters from './UsersListFilters';
 import UsersListRows from './UsersListRows';
@@ -21,7 +22,10 @@ const UserList = ({ initialUsers }) => {
 				sortBy={sortBy}
 				{...filterSetters}
 			/>
-			<UsersListRows users={userFiltered} toggleUserActive={toggleUserActive} />
+			{/* El contexto envuelve aquel componente que tendrá acceso al mismo, de manera directa o porque un hijo de UsersListRows lo utilizará, es imprtante poner .Provider para indicar la función de transmisor de props que está realizando el contexto. */}
+			<UsersContext.Provider value={{ toggleUserActive }}>
+				<UsersListRows users={userFiltered} />
+			</UsersContext.Provider>
 		</div>
 	);
 };
