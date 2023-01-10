@@ -7,7 +7,7 @@ import UsersListRows from './UsersListRows';
 const UserList = ({ initialUsers }) => {
 	const { search, onlyActive, sortBy, ...filterSetters } = useFiltersUsers();
 
-	const { toggleUserActive, users } = useUsers(initialUsers);
+	const { users } = useUsers(initialUsers);
 
 	let userFiltered = filterOnlyActive(users, onlyActive);
 	userFiltered = filterByName(userFiltered, search);
@@ -22,10 +22,7 @@ const UserList = ({ initialUsers }) => {
 				sortBy={sortBy}
 				{...filterSetters}
 			/>
-			{/* El contexto envuelve aquel componente que tendrá acceso al mismo, de manera directa o porque un hijo de UsersListRows lo utilizará, es imprtante poner .Provider para indicar la función de transmisor de props que está realizando el contexto. */}
-			<UsersContext.Provider value={{ toggleUserActive }}>
-				<UsersListRows users={userFiltered} />
-			</UsersContext.Provider>
+			<UsersListRows users={userFiltered} />
 		</div>
 	);
 };
@@ -33,19 +30,7 @@ const UserList = ({ initialUsers }) => {
 const useUsers = initialUsers => {
 	const [users, setUsers] = useState(initialUsers);
 
-	const toggleUserActive = userId => {
-		const newUsers = [...users]; // Hay que hacer copia porque sino no activará y desactivará los usuarios.
-
-		const userIndex = newUsers.findIndex(user => user.id === userId); // Devuelve la posición del array en el que se encuentra un usuario.
-
-		if (userIndex === -1) return;
-
-		newUsers[userIndex].active = !newUsers[userIndex].active; // Cambiamos el estado del usuario.
-
-		setUsers(newUsers);
-	};
-
-	return { toggleUserActive, users };
+	return { users };
 };
 
 const useFiltersUsers = () => {
