@@ -1,0 +1,32 @@
+.input {
+	width: 100%;
+	height: 2.5rem;
+	padding: 0.5rem 1rem;
+	padding-left: 2.5rem;
+	border-radius: var(--radius-sm);
+	border: none;
+	outline: none;
+	box-shadow: var(--shadow-sm);
+}
+
+.input:focus {
+	box-shadow: var(--shadow-md);
+}
+
+.input::placeholder {
+	color: var(--color-lightgray);
+}
+
+.wrapper {
+	position: relative;
+}
+
+.icon {
+	pointer-events: none;
+	position: absolute;
+	top: 0.75rem; /* Sabemos que el contenedor mide 2.5rem (40px) y el icono 1 rem, si lo restamos nos sale 1.5rem que dividido entre 2 salen los 0.75 de distancia que debe tener en positión absolute para quedar centrada */
+	left: 1rem; /* Ponemos un rem que es igual al padding inicial que habíamos seleccionado. */
+	height: 1rem;
+	width: 1rem;
+	color: var(--color-lightgray);
+}

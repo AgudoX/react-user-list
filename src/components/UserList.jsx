@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { UsersContext } from '../lib/context/UsersContext';
 import style from './UserList.module.css';
 import UsersListFilters from './UsersListFilters';
 import UsersListRows from './UsersListRows';
@@ -11,11 +10,11 @@ const UserList = ({ initialUsers }) => {
 
 	let userFiltered = filterOnlyActive(users, onlyActive);
 	userFiltered = filterByName(userFiltered, search);
-	userFiltered = sortByName(userFiltered, sortBy);
+	userFiltered = sortUsers(userFiltered, sortBy);
 
 	return (
 		<div className={style.list}>
-			<h1>Listado de Usuarios</h1>
+			<h1 className={style.title}>Listado de Usuarios</h1>
 			<UsersListFilters
 				search={search}
 				onlyActive={onlyActive}
@@ -48,10 +47,17 @@ const useFiltersUsers = () => {
 	};
 
 	const setOnlyActive = onlyActive => {
-		setFilters({
-			...filters,
-			onlyActive
-		});
+		if (onlyActive && filters.sortBy === 3)
+			setFilters({
+				...filters,
+				onlyActive,
+				sortBy: 0
+			});
+		else
+			setFilters({
+				...filters,
+				onlyActive
+			});
 	};
 
 	const setSortBy = sortBy => {
@@ -74,7 +80,7 @@ const filterByName = (users, search) => {
 	if (!search) return [...users];
 
 	return users.filter(user =>
-		user.name.toLowerCase().startsWith(lowerCaseSearch)
+		user.name.toLowerCase().includes(lowerCaseSearch)
 	);
 };
 
@@ -84,7 +90,7 @@ const filterOnlyActive = (users, activeState) => {
 	return users.filter(user => user.active);
 };
 
-const sortByName = (users, sortBy) => {
+const sortUsers = (users, sortBy) => {
 	const sortedUsers = [...users];
 
 	switch (sortBy) {
@@ -93,6 +99,20 @@ const sortByName = (users, sortBy) => {
 				if (a.name > b.name) return 1;
 				if (a.name < b.name) return -1;
 				return 0;
+			});
+
+		case 2:
+			return sortedUsers.sort((a, b) => {
+				if (a.role === b.role) return 0;
+				if (a.role === 'teacher') return -1;
+				if (a.role === 'student' && b.role === 'other') return -1;
+				return 1;
+			});
+		case 3:
+			return sortedUsers.sort((a, b) => {
+				if (a.active === b.active) return 0;
+				if (a.active && !b.active) return -1;
+				return 1;
 			});
 		default:
 			return sortedUsers;

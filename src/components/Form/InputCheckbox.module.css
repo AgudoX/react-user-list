@@ -1,0 +1,33 @@
+.input {
+	opacity: 0; /* Usamos opacity para que si funcione pero este oculto */
+	position: absolute; /* Este positión hace que no desplaze el input al svg*/
+	top: -100vh; /* Sacar al input de la pantalla */
+}
+
+.label {
+	cursor: pointer;
+	position: relative; /* Le ponemos este position para que  */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	height: 2rem;
+	width: 2rem;
+	border-radius: var(--radius-sm);
+	box-shadow: var(--shadow-sm);
+}
+
+.label:focus-within {
+	box-shadow: var(--shadow-md);
+}
+
+.check {
+	user-select: none; /* Para que el usuario no pueda seleccionar la x del check */
+	height: 1.5rem;
+	width: 1.5rem;
+}
+
+/* Si el input no está checked, lo que tiene que hacer con su hermano es no mostrarlo, el + es para referirnos a su hermano */
+.input:not(:checked) + .check {
+	display: none;
+}

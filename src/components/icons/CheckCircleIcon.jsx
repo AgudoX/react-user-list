@@ -1,10 +1,10 @@
 const CheckCircleIcon = props => (
 	<svg
+		{...props}
 		fill='none' // hace referencia al relleno del icono
 		stroke='currentColor' // Hace referencia al borde, color del borde igual al color del texto que acompañe al svg
 		viewBox='0 0 24 24'
 		xmlns='http://www.w3.org/2000/svg'
-		{...props}
 	>
 		<path
 			strokeLinecap='round'

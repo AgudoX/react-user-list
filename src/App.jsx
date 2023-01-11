@@ -17,7 +17,7 @@ const USERS = [
 		username: 'luka',
 		name: 'Luka Dolchi',
 		active: true,
-		role: 'blasd'
+		role: 'other'
 	},
 	{
 		username: 'jose',
