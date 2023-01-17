@@ -1,23 +1,43 @@
 import { useState } from 'react';
 import { USER_ROLE } from '../../constants/userRole';
-import { createUser } from '../../lib/api/usersApi';
-import { useCreateForm } from '../../lib/hooks/useCreateForm';
+import { updateUser } from '../../lib/api/usersApi';
+import { useEditForm } from '../../lib/hooks/useEditForm';
 import Button from '../buttons/Button';
 import InputCheckbox from '../Form/InputCheckbox';
 import InputText from '../Form/InputText';
 import InputTextAsync from '../Form/InputTextAsync';
 import Select from '../Form/Select';
-import style from './UserCreateForm.module.css';
+import style from './UserEditForm.module.css';
 
-const UserCreateForm = ({ onSuccess }) => {
+const UserEditForm = ({ onSuccess, user }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const { username, name, setUsername, setName, isFormInvalid } =
-		useCreateForm();
+	const {
+		username,
+		name,
+		role,
+		active,
+		setActive,
+		setRole,
+		setUsername,
+		setName,
+		isFormInvalid
+	} = useEditForm(user);
 
 	return (
 		<form
 			onSubmit={ev =>
-				handleSubmit(ev, name, username, setIsSubmitting, onSuccess)
+				handleSubmit(
+					ev,
+					{
+						id: user.id,
+						name: name.value,
+						username: username.value,
+						role,
+						active
+					},
+					setIsSubmitting,
+					onSuccess
+				)
 			}
 		>
 			<div className={style.row}>
@@ -33,7 +53,11 @@ const UserCreateForm = ({ onSuccess }) => {
 					label='Username'
 					className={style.input}
 					placeholder='bradpitt'
-					success={username.value && !username.loading && !username.error}
+					success={
+						username.value !== user.username &&
+						!username.loading &&
+						!username.error
+					}
 					loading={username.loading}
 					error={username.error}
 					value={username.value}
@@ -41,17 +65,20 @@ const UserCreateForm = ({ onSuccess }) => {
 				></InputTextAsync>
 			</div>
 			<div className={style.row}>
-				<Select name='role'>
+				<Select value={role} onChange={ev => setRole(ev.target.value)}>
 					<option value={USER_ROLE.TEACHER}>Profesor</option>
 					<option value={USER_ROLE.STUDENT}>Alumno</option>
 					<option value={USER_ROLE.OTHER}>Otro</option>
 				</Select>
 				<div className={style.active}>
-					<InputCheckbox name='active' />
+					<InputCheckbox
+						checked={active}
+						onChange={ev => setActive(ev.target.checked)}
+					/>
 					<span>¿Activo?</span>
 				</div>
 				<Button disabled={isSubmitting || isFormInvalid} type='submit'>
-					{isSubmitting ? 'Cargando...' : 'Crear usuario'}
+					{isSubmitting ? 'Cargando...' : 'Editar usuario'}
 				</Button>
 			</div>
 		</form>
@@ -59,22 +86,15 @@ const UserCreateForm = ({ onSuccess }) => {
 };
 
 // Cuendo el handler de un evento aumenta mucho es mejor extraerlo y posteriormente pasarselo en forma de función.
-const handleSubmit = async (ev, name, username, setIsSubmitting, onSuccess) => {
+const handleSubmit = async (ev, user, setIsSubmitting, onSuccess) => {
 	ev.preventDefault();
 	setIsSubmitting(true);
-	const user = {
-		id: crypto.randomUUID(),
-		name: name.value,
-		username: username.value,
-		role: ev.target.role.value,
-		active: ev.target.active.checked
-	};
 
-	const postSuccessfully = await createUser(user); // Como queremos una unica responsabilidad hemos creado la función createUser que se encargará de la gestión de la petición post y así la separamos del handleSubmit.
+	const postSuccessfully = await updateUser(user);
 
 	if (postSuccessfully) {
 		onSuccess(); // Actualiza usuarios después de que se cree uno nuevo.
 	} else setIsSubmitting(false);
 };
 
-export default UserCreateForm;
+export default UserEditForm;

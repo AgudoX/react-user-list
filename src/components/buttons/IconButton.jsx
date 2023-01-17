@@ -13,7 +13,7 @@ const CLASSNAME = {
 
 const IconButton = ({
 	kind = 'black',
-	filled = true,
+	filled = false,
 	icon: Icon,
 	className,
 	...props

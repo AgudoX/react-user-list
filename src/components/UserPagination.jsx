@@ -7,6 +7,7 @@ const UserPagination = ({ page, setPage, totalPages }) => {
 	return (
 		<div className={style.wrapper}>
 			<IconButton
+				filled
 				icon={ArrowLeftIcon}
 				disabled={page <= 1 ? true : ''}
 				onClick={() => setPage(page - 1)}
@@ -16,6 +17,7 @@ const UserPagination = ({ page, setPage, totalPages }) => {
 				Página {page} de {totalPages || 1}
 			</span>
 			<IconButton
+				filled
 				icon={ArrowRightIcon}
 				disabled={page >= totalPages || totalPages === 0 ? true : ''}
 				onClick={() => setPage(page + 1)}

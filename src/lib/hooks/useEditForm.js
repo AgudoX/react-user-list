@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import { findUserByUsername } from '../api/usersApi';
 import { validateName, validateUsername } from '../users/userValidations';
 
-export const useCreateForm = () => {
-	const [userFormValues, setUserFormValues] = useState({
-		name: { value: '', error: undefined },
-		username: { value: '', loading: false, error: undefined }
-	});
+export const useEditForm = user => {
+	const [userFormValues, setUserFormValues] = useState(() =>
+		getInitialState(user)
+	);
 
 	const setName = newName => {
 		const error = validateName(newName);
@@ -18,9 +17,28 @@ export const useCreateForm = () => {
 
 	const setUsername = newUsername => {
 		const error = validateUsername(newUsername);
+		const isInitialValue = newUsername === user.username;
 		setUserFormValues({
 			...userFormValues,
-			username: { value: newUsername, loading: !error, error }
+			username: {
+				value: newUsername,
+				loading: !isInitialValue && !error,
+				error
+			}
+		});
+	};
+
+	const setRole = newRole => {
+		setUserFormValues({
+			...userFormValues,
+			role: newRole
+		});
+	};
+
+	const setActive = newActive => {
+		setUserFormValues({
+			...userFormValues,
+			active: newActive
 		});
 	};
 
@@ -33,6 +51,10 @@ export const useCreateForm = () => {
 				error
 			}
 		}));
+
+	useEffect(() => {
+		setUserFormValues(getInitialState(user));
+	}, [user]);
 
 	useEffect(() => {
 		if (!userFormValues.username.loading) return;
@@ -55,15 +77,34 @@ export const useCreateForm = () => {
 	}, [userFormValues.username.loading, userFormValues.username.value]);
 
 	const isFormInvalid =
-		!userFormValues.name.value ||
+		areInitialValues(userFormValues, user) ||
 		userFormValues.name.error ||
-		userFormValues.name.loading ||
-		!userFormValues.username.value ||
 		userFormValues.username.error ||
 		userFormValues.username.loading;
 
-	return { ...userFormValues, setName, setUsername, isFormInvalid };
+	return {
+		...userFormValues,
+		setName,
+		setUsername,
+		setActive,
+		setRole,
+		isFormInvalid
+	};
 };
+
+const getInitialState = user => ({
+	name: { value: user.name, error: undefined },
+	username: { value: user.username, loading: false, error: undefined },
+	role: user.role,
+	active: user.active
+});
+
+// Devuelve true o false dependiendo de si los valores iniciales coinciden o no
+const areInitialValues = (formValues, user) =>
+	formValues.name === user.name &&
+	formValues.username === user.username &&
+	formValues.role === user.role &&
+	formValues.active === user.active;
 
 const validateUsernameIsAvailable = async (
 	username,
