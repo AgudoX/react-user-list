@@ -1,0 +1,67 @@
+export const createUser = async user => {
+	try {
+		const res = await fetch('http://localhost:4000/users', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(user) // Convertimos user en un JSON
+		});
+
+		return res.ok;
+	} catch {
+		return false;
+	}
+};
+
+export const findAllUsers = async signal => {
+	try {
+		const response = await fetch(`http://localhost:4000/users`, { signal });
+
+		let users;
+		if (response.ok) users = await response.json();
+
+		return {
+			users,
+			error: !response.ok,
+			aborted: false
+		};
+	} catch (err) {
+		const isAborted = err.name === 'AbortError';
+
+		return {
+			users: undefined,
+			error: !isAborted,
+			aborted: isAborted
+		};
+	}
+};
+
+export const findUserByUsername = async (username, signal) => {
+	try {
+		const response = await fetch(
+			`http://localhost:4000/users/?username=${username}`,
+			{ signal }
+		);
+
+		let user;
+		if (response.ok) {
+			const users = await response.json();
+			user = users[0];
+		}
+
+		return {
+			user,
+			error: !response.ok,
+			aborted: false
+		};
+	} catch (err) {
+		const isAborted = err.name === 'AbortError';
+
+		return {
+			user: undefined,
+			error: !isAborted,
+			aborted: isAborted
+		};
+	}
+};
