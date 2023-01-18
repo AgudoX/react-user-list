@@ -1,18 +1,22 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { deleteUserById } from '../../lib/api/usersApi';
+import { UsersFormContext } from '../../lib/context/UsersFormContext';
 import Button from '../buttons/Button';
 import style from './UserDeleteForm.module.css';
 
-const UserDeleteForm = ({ onSuccess, user, onCancel }) => {
+const UserDeleteForm = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-
+	const { currentUser, setFiltersForm, onSuccess } =
+		useContext(UsersFormContext);
 	return (
 		<form
-			onSubmit={ev => handleSubmit(ev, user.id, setIsSubmitting, onSuccess)}
+			onSubmit={ev =>
+				handleSubmit(ev, currentUser.id, setIsSubmitting, onSuccess)
+			}
 		>
 			<p className={style.text}>
 				¿Estás seguro de que deseas eliminar al usuario {'"'}
-				{user.name}
+				{currentUser.name}
 				{'"'}?
 			</p>
 			<div className={style.row}>
@@ -20,7 +24,7 @@ const UserDeleteForm = ({ onSuccess, user, onCancel }) => {
 					disabled={isSubmitting}
 					kind='secondary'
 					type='submit'
-					onClick={onCancel}
+					onClick={setFiltersForm}
 				>
 					{isSubmitting ? 'Cargando...' : 'Cancelar'}
 				</Button>

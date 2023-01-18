@@ -1,7 +1,7 @@
 import SORT_OPTIONS from '../../constants/sortOptions';
 import { USER_ROLE } from '../../constants/userRole';
 
-export const filterByName = (users, search) => {
+const filterByName = (users, search) => {
 	const lowerCaseSearch = search.toLocaleLowerCase();
 	if (!search) return [...users];
 
@@ -10,13 +10,13 @@ export const filterByName = (users, search) => {
 	);
 };
 
-export const filterOnlyActive = (users, activeState) => {
+const filterOnlyActive = (users, activeState) => {
 	if (!activeState) return [...users];
 
 	return users.filter(user => user.active);
 };
 
-export const sortUsers = (users, sortBy) => {
+const sortUsers = (users, sortBy) => {
 	const sortedUsers = [...users];
 
 	switch (sortBy) {
@@ -46,12 +46,30 @@ export const sortUsers = (users, sortBy) => {
 	}
 };
 
-export const paginateUsers = (users, page, usersPerPage) => {
+const paginateUsers = (users, page, usersPerPage) => {
 	const startIndex = (page - 1) * usersPerPage;
 	const endIndex = startIndex + usersPerPage; // si estuvieramos en la página 0 el endIndex sería el 2, slice devuelve desde la posición inicial que se le indica en el primer parámetro a uno antes de la posición final, en este caso si el endIndex es 2 devolvería hasta el que este en la posición 1.
 	const totalPages = Math.ceil(users.length / usersPerPage);
 
 	const paginatedUsers = users.slice(startIndex, endIndex);
+
+	return { totalPages, paginatedUsers };
+};
+
+export const getUsersToDisplay = (
+	users,
+	{ search, onlyActive, sortBy },
+	{ page, userPerPage }
+) => {
+	let userFiltered = filterOnlyActive(users, onlyActive);
+	userFiltered = filterByName(userFiltered, search);
+	userFiltered = sortUsers(userFiltered, sortBy);
+
+	const { totalPages, paginatedUsers } = paginateUsers(
+		userFiltered,
+		page,
+		userPerPage
+	);
 
 	return { totalPages, paginatedUsers };
 };
