@@ -12,7 +12,7 @@ const UserRow = ({ id, username, name, active, role = 'Profesor' }) => {
 	const { setDeleteForm, setEditForm } = useContext(UsersFormContext);
 
 	return (
-		<div className={style.user}>
+		<div className={style.wrapper}>
 			<div className={style.name}>
 				<UserDisplay name={name} username={username} />
 			</div>

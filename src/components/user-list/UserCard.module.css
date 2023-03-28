@@ -1,0 +1,26 @@
+.wrapper {
+	padding: 0.5rem;
+	width: 50%;
+}
+
+.card {
+	box-shadow: var(--shadow-sm);
+	border-radius: var(--radius-md);
+	padding: 0.75rem 1.5rem;
+}
+
+.name {
+	margin-top: 0.5rem;
+	margin-top: 1rem;
+}
+
+.info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 1rem;
+}
+.actions {
+	display: flex;
+	align-items: center;
+}

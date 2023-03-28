@@ -58,18 +58,8 @@ export const useFiltersUsers = () => {
 		setFilters(INITIAL_STATE);
 	};
 
-	const { search, onlyActive, sortBy, page, userPerPage } = filters;
-
 	return {
-		filters: {
-			search,
-			onlyActive,
-			sortBy
-		},
-		pagination: {
-			page,
-			userPerPage
-		},
+		filters,
 		filterSetters: {
 			setSearch,
 			setOnlyActive,

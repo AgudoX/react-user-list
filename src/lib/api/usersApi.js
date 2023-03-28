@@ -42,15 +42,19 @@ export const deleteUserById = async userId => {
 	}
 };
 
-export const findAllUsers = async signal => {
+export const findAllUsers = async (signal, { page, userPerPage }) => {
 	try {
-		const response = await fetch(`http://localhost:4000/users`, { signal });
+		const response = await fetch(
+			`http://localhost:4000/users?_page=${page}&_limit=${userPerPage}`,
+			{ signal }
+		);
 
 		let users;
 		if (response.ok) users = await response.json();
 
 		return {
 			users,
+			count: response.ok ? response.headers.get('x-total-count') : 0,
 			error: !response.ok,
 			aborted: false
 		};
@@ -59,6 +63,7 @@ export const findAllUsers = async signal => {
 
 		return {
 			users: undefined,
+			count: 0,
 			error: !isAborted,
 			aborted: isAborted
 		};
