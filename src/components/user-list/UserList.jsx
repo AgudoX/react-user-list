@@ -15,13 +15,13 @@ const UserList = () => {
 		useFiltersUsers();
 	const [view, setView] = useState(true);
 
-	const { users, usersError, usersLoading, reloadUsers, usersCount } =
+	const { users, usersError, usersLoading, usersCount } =
 		useUsers(filters);
 
 	return (
 		<div className={style.list}>
 			<h1 className={style.title}>Listado de Usuarios</h1>
-			<UserFormProvider resetFilters={resetFilters} reloadUsers={reloadUsers}>
+			<UserFormProvider resetFilters={resetFilters}>
 				<UsersListFilters
 					search={filters.search}
 					onlyActive={filters.onlyActive}
@@ -41,7 +41,7 @@ const UserList = () => {
 				page={filters.page}
 				itemsPerPage={filters.userPerPage}
 				{...paginationSetters}
-				totalPages={Math.ceil(usersCount / filters.userPerPage)}
+				totalUsers={usersCount}
 			/>
 		</div>
 	);

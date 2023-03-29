@@ -1,3 +1,5 @@
+import SORT_OPTIONS from "../../constants/sortOptions";
+
 export const createUser = async user => {
 	try {
 		const res = await fetch('http://localhost:4000/users', {
@@ -42,10 +44,38 @@ export const deleteUserById = async userId => {
 	}
 };
 
-export const findAllUsers = async (signal, { page, userPerPage }) => {
+const SORT_MAPPER = {
+	[SORT_OPTIONS.NAME]: ['name', 'asc'],
+	[SORT_OPTIONS.ROLE]: ['role', 'desc'],
+	[SORT_OPTIONS.ACTIVE]: ['active', 'desc']
+}
+
+const getFindAllUrl = ({ page, userPerPage, search, onlyActive, sortBy }) => {
+	const url = new URL('http://localhost:4000/users');
+	url.searchParams.append('_page', page) // Le pasamos los query params de la url, en este caso _page = page
+	url.searchParams.append('_limit', userPerPage) // El resultado final de la constante url es este http://localhost:4000/users?_page=${page}&_limit=${userPerPage}
+
+	// Si existen search o anlyActive añade los filtros a la URL
+	if (search) url.searchParams.append('name_like', search);
+	if (onlyActive) url.Params.append('active', onlyActive);
+
+	const sortProps = SORT_MAPPER[sortBy];
+
+	if (sortProps) {
+		const [sort, order] = sortProps
+		url.searchParams.append('_sort', sort);
+		url.searchParams.append('_order', order);
+	}
+	return url.href;
+}
+
+export const findAllUsers = async (signal, filters) => {
+
+	const url = getFindAllUrl(filters)
+
 	try {
 		const response = await fetch(
-			`http://localhost:4000/users?_page=${page}&_limit=${userPerPage}`,
+			url,
 			{ signal }
 		);
 

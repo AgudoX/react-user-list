@@ -4,16 +4,17 @@ import style from './UserListPagination.module.css';
 
 const UserListPagination = ({
 	page,
-	userPerPage,
+	itemsPerPage,
 	setPage,
 	setUserPerPage,
-	totalPages
+	totalUsers
 }) => {
+
 	return (
 		<div className={style.wrapper}>
 			<div className={style.itemsPerPage}>
 				<Select
-					value={userPerPage}
+					value={itemsPerPage}
 					onChange={ev => setUserPerPage(Number(ev.target.value))}
 				>
 					<option value={4}>4</option>
@@ -22,7 +23,7 @@ const UserListPagination = ({
 				</Select>
 				<p>Elementos por página</p>
 			</div>
-			<UserPagination page={page} setPage={setPage} totalPages={totalPages} />
+			<UserPagination page={page} setPage={setPage} totalPages={Math.ceil(totalUsers / itemsPerPage)} />
 		</div>
 	);
 };

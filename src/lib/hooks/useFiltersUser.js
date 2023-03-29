@@ -55,7 +55,7 @@ export const useFiltersUsers = () => {
 		});
 
 	const resetFilters = () => {
-		setFilters(INITIAL_STATE);
+		setFilters({ ...INITIAL_STATE });
 	};
 
 	return {
