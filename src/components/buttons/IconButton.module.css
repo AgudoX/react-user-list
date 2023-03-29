@@ -15,6 +15,11 @@
 	cursor: default;
 }
 
+/* Para temas de accesbilidad posemos añadirle una sombra al botón cuando se le haga focus, para que cuando se navegue con el teclado y se le haga focus se le ponga un a sombra */
+.button:focus {
+	box-shadow: var(--shadow-sm);
+}
+
 .icon {
 	height: 1.25rem;
 	width: 1.25rem;
