@@ -13,9 +13,9 @@ import UsersListRows from './UsersListRows';
 const UserList = () => {
 	const { filters, filterSetters, paginationSetters, resetFilters } =
 		useFiltersUsers();
-	const [view, setView] = useState(true);
+	const [showRowsFormat, setShowRowsFormat] = useState(true);
 
-	const { users, usersError, usersLoading, usersCount } =
+	const { users, usersError, usersLoading, totalUsers } =
 		useUsers(filters);
 
 	return (
@@ -29,19 +29,19 @@ const UserList = () => {
 					{...filterSetters}
 				/>
 				<UserFormContainer />
-				<UserListViewSelector view={view} setView={setView} />
+				<UserListViewSelector showRowsFormat={showRowsFormat} setShowRowsFormat={setShowRowsFormat} />
 				<UsersListRows
 					users={users}
 					error={usersError}
 					loading={usersLoading}
-					view={view}
+					view={showRowsFormat}
 				/>
 			</UserFormProvider>
 			<UserListPagination
 				page={filters.page}
 				itemsPerPage={filters.userPerPage}
 				{...paginationSetters}
-				totalUsers={usersCount}
+				totalUsers={totalUsers}
 			/>
 		</div>
 	);
