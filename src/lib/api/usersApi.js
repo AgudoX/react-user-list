@@ -1,8 +1,9 @@
+import { environment } from "../../constants/environment";
 import SORT_OPTIONS from "../../constants/sortOptions";
 
 export const createUser = async user => {
 	try {
-		const res = await fetch('http://localhost:4000/users', {
+		const res = await fetch(environment.apiUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -18,7 +19,7 @@ export const createUser = async user => {
 
 export const updateUser = async user => {
 	try {
-		const res = await fetch(`http://localhost:4000/users/${user.id}`, {
+		const res = await fetch(`${environment.apiUrl}/${user.id}`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
@@ -34,7 +35,7 @@ export const updateUser = async user => {
 
 export const deleteUserById = async userId => {
 	try {
-		const res = await fetch(`http://localhost:4000/users/${userId}`, {
+		const res = await fetch(`${environment.apiUrl}/${userId}`, {
 			method: 'DELETE'
 		});
 
@@ -51,13 +52,13 @@ const SORT_MAPPER = {
 }
 
 const getFindAllUrl = ({ page, userPerPage, search, onlyActive, sortBy }) => {
-	const url = new URL('http://localhost:4000/users');
+	const url = new URL(environment.apiUrl);
 	url.searchParams.append('_page', page) // Le pasamos los query params de la url, en este caso _page = page
 	url.searchParams.append('_limit', userPerPage) // El resultado final de la constante url es este http://localhost:4000/users?_page=${page}&_limit=${userPerPage}
 
 	// Si existen search o anlyActive añade los filtros a la URL
 	if (search) url.searchParams.append('name_like', search);
-	if (onlyActive) url.Params.append('active', onlyActive);
+	if (onlyActive) url.searchParams.append('active', onlyActive);
 
 	const sortProps = SORT_MAPPER[sortBy];
 
@@ -103,7 +104,7 @@ export const findAllUsers = async (signal, filters) => {
 export const findUserByUsername = async (username, signal) => {
 	try {
 		const response = await fetch(
-			`http://localhost:4000/users/?username=${username}`,
+			`${environment.apiUrl}/?username=${username}`,
 			{ signal }
 		);
 

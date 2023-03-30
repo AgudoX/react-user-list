@@ -3,14 +3,14 @@ import ArrowLeftIcon from '../icons/ArrowLeftIcon';
 import ArrowRightIcon from '../icons/ArrowRightIcon';
 import style from './UserPagination.module.css';
 
-const UserPagination = ({ page, setPage, totalPages }) => {
+const UserPagination = ({ page, dispatchFilters, totalPages }) => {
 	return (
 		<div className={style.wrapper}>
 			<IconButton
 				filled
 				icon={ArrowLeftIcon}
 				disabled={page <= 1 ? true : ''}
-				onClick={() => setPage(page - 1)}
+				onClick={() => dispatchFilters({ type: 'page_changed', value: page - 1 })}
 				className={style.icons}
 			/>
 			<span className={style.page}>
@@ -20,7 +20,7 @@ const UserPagination = ({ page, setPage, totalPages }) => {
 				filled
 				icon={ArrowRightIcon}
 				disabled={page >= totalPages || totalPages === 0 ? true : ''}
-				onClick={() => setPage(page + 1)}
+				onClick={() => dispatchFilters({ type: 'page_changed', value: page + 1 })}
 				className={style.icons}
 			/>
 		</div>

@@ -10,12 +10,9 @@ import style from './UsersListFilters.module.css';
 
 const UsersListFilters = ({
 	search,
-	setSearch,
 	onlyActive,
-	setOnlyActive,
 	sortBy,
-	setSortBy,
-	slot
+	dispatchFilters
 }) => {
 	const { setCreateForm, currentForm } = useContext(UsersFormContext);
 
@@ -27,12 +24,12 @@ const UsersListFilters = ({
 					placeholder='Buscar...'
 					value={search}
 					onInput={ev => {
-						setSearch(ev.target.value);
+						dispatchFilters({ type: 'search_changed', value: ev.target.value });
 					}}
 				/>
 				<Select
 					value={sortBy}
-					onChange={ev => setSortBy(Number(ev.target.value))}
+					onChange={ev => dispatchFilters({ type: 'sort_by_changed', value: Number(ev.target.value) })}
 				>
 					<option value={SORT_OPTIONS.DEFAULT}>Por defecto</option>
 					<option value={SORT_OPTIONS.NAME}>Por nombre</option>
@@ -50,7 +47,7 @@ const UsersListFilters = ({
 					<InputCheckbox
 						checked={onlyActive}
 						className={style.checkbox}
-						onChange={ev => setOnlyActive(ev.target.checked)}
+						onChange={ev => dispatchFilters({ type: 'only_active_changed', value: ev.target.checked })}
 					/>
 					<p>Mostrar solo activos</p>
 				</div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { PAGINATION } from '../../constants/pagination';
 import SORT_OPTIONS from '../../constants/sortOptions';
 
@@ -9,67 +9,61 @@ const INITIAL_STATE = {
 	page: PAGINATION.DEFAULT_PAGE,
 	userPerPage: PAGINATION.DEFAULT_ITEMS_PER_PAGE
 };
+
+const filtersReducer = (state, action) => {
+	switch (action.type) {
+		case 'search_changed':
+			return {
+				...state,
+				search: action.value,
+				page: PAGINATION.DEFAULT_PAGE
+			}
+		case 'only_active_changed': {
+			const newSortBy =
+				action.value && state.sortBy === SORT_OPTIONS.ACTIVE
+					? SORT_OPTIONS.DEFAULT
+					: state.sortBy;
+
+			return {
+				...state,
+				onlyActive: action.value,
+				sortBy: newSortBy,
+				page: PAGINATION.DEFAULT_PAGE
+			};
+		}
+		case 'sort_by_changed': {
+			return {
+				...state,
+				sortBy: action.value,
+				page: PAGINATION.DEFAULT_PAGE
+			}
+		}
+		case 'page_changed': {
+			return {
+				...state,
+				page: action.value
+			}
+		}
+		case 'items_per_page_changed': {
+			return {
+				...state,
+				userPerPage: action.value,
+				page: PAGINATION.DEFAULT_PAGE
+			}
+		}
+		case 'reset': {
+			return INITIAL_STATE
+		}
+		default:
+			throw new Error('Invalid action type')
+	}
+}
+
 export const useFiltersUsers = () => {
-	const [filters, setFilters] = useState(INITIAL_STATE);
-
-	const setSearch = search => {
-		setFilters({
-			...filters,
-			search,
-			page: PAGINATION.DEFAULT_PAGE
-		});
-	};
-
-	const setOnlyActive = onlyActive => {
-		const newSortBy =
-			onlyActive && filters.sortBy === SORT_OPTIONS.ACTIVE
-				? SORT_OPTIONS.DEFAULT
-				: filters.sortBy;
-
-		setFilters({
-			...filters,
-			onlyActive,
-			sortBy: newSortBy,
-			page: PAGINATION.DEFAULT_PAGE
-		});
-	};
-
-	const setSortBy = sortBy => {
-		setFilters({
-			...filters,
-			sortBy,
-			page: PAGINATION.DEFAULT_PAGE
-		});
-	};
-
-	const setPage = newPage =>
-		setFilters({
-			...filters,
-			page: newPage
-		});
-
-	const setUserPerPage = newUserPerPage =>
-		setFilters({
-			...filters,
-			userPerPage: newUserPerPage,
-			page: PAGINATION.DEFAULT_PAGE
-		});
-
-	const resetFilters = () => {
-		setFilters({ ...INITIAL_STATE });
-	};
+	const [filters, dispatchFilters] = useReducer(filtersReducer, INITIAL_STATE);
 
 	return {
 		filters,
-		filterSetters: {
-			setSearch,
-			setOnlyActive,
-			setSortBy
-		},
-		paginationSetters: {
-			setPage,
-			setUserPerPage
-		},
-		resetFilters
+		dispatchFilters
 	};
 };
