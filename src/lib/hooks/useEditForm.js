@@ -1,59 +1,69 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { findUserByUsername } from '../api/usersApi';
 import { validateName, validateUsername } from '../users/userValidations';
 
+
+const formValuesReducer = (state, action) => {
+	switch (action.type) {
+		case 'name_changed': {
+			const error = validateName(action.value)
+
+			return ({
+				...state,
+				name: { value: action.value, error }
+			})
+		}
+		case 'username_changed': {
+			const error = validateUsername(action.value);
+			const isInitialValue = action.value === action.currentUsername;
+			return ({
+				...state,
+				username: {
+					value: action.value,
+					loading: !isInitialValue && !error,
+					error
+				}
+			})
+		}
+		case 'role_changed': {
+			return {
+				...state,
+				role: action.value
+			}
+		}
+		case 'active_changed': {
+			return {
+				...state,
+				active: action.value
+			}
+		}
+		case 'username_error_changed': {
+			return {
+				...state,
+				username: {
+					loading: false,
+					value: state.username.value,
+					error: action.value
+				}
+			}
+		}
+		case 'replace':
+			return action.value
+
+		default:
+			throw new Error('Invalid action type')
+
+	}
+}
+
+
 export const useEditForm = user => {
-	const [userFormValues, setUserFormValues] = useState(() =>
-		getInitialState(user)
-	);
 
-	const setName = newName => {
-		const error = validateName(newName);
-		setUserFormValues({
-			...userFormValues,
-			name: { value: newName, error }
-		});
-	};
+	const [userFormValues, dispatchUserFormValues] = useReducer(formValuesReducer, user, getInitialState);
 
-	const setUsername = newUsername => {
-		const error = validateUsername(newUsername);
-		const isInitialValue = newUsername === user.username;
-		setUserFormValues({
-			...userFormValues,
-			username: {
-				value: newUsername,
-				loading: !isInitialValue && !error,
-				error
-			}
-		});
-	};
-
-	const setRole = newRole => {
-		setUserFormValues({
-			...userFormValues,
-			role: newRole
-		});
-	};
-
-	const setActive = newActive => {
-		setUserFormValues({
-			...userFormValues,
-			active: newActive
-		});
-	};
-
-	const setUsernameError = error =>
-		setUserFormValues(previusValue => ({
-			...previusValue,
-			username: {
-				loading: false,
-				value: previusValue.username.value,
-				error
-			}
-		}));
 
 	useEffect(() => {
-		setUserFormValues(getInitialState(user));
+		dispatchUserFormValues({ type: 'replace', value: getInitialState(user) });
 	}, [user]);
 
 	useEffect(() => {
@@ -64,7 +74,7 @@ export const useEditForm = user => {
 			() =>
 				validateUsernameIsAvailable(
 					userFormValues.username.value,
-					setUsernameError,
+					dispatchUserFormValues,
 					controller.signal
 				),
 			500
@@ -84,10 +94,7 @@ export const useEditForm = user => {
 
 	return {
 		...userFormValues,
-		setName,
-		setUsername,
-		setActive,
-		setRole,
+		dispatchUserFormValues,
 		isFormInvalid
 	};
 };
@@ -108,13 +115,16 @@ const areInitialValues = (formValues, user) =>
 
 const validateUsernameIsAvailable = async (
 	username,
-	setUsernameError,
+	dispatchUserFormValues,
 	signal
 ) => {
 	const { user, error, aborted } = await findUserByUsername(username, signal);
 
 	if (aborted) return;
-	if (error) return setUsernameError('Error al validar');
+	if (error) return dispatchUserFormValues({ type: 'username_error_changed', value: 'Error al validar' });
 
-	user ? setUsernameError('Ya está en uso') : setUsernameError(undefined);
+	dispatchUserFormValues({
+		type: 'username_error_changed',
+		value: user ? 'Ya está en uso' : undefined
+	})
 };

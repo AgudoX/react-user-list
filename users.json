@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "c3ce080a-88ee-4b1c-b88e-e7070b1365e6",
-      "username": "bfarge0",
+      "username": "bfarge1",
       "name": "Bird Farge",
       "active": false,
       "role": "student"
@@ -51,7 +51,7 @@
     },
     {
       "id": "04aa6dff-b74b-4abf-bcce-1668581cb3e0",
-      "username": "arykert7",
+      "username": "arykert8",
       "name": "Aksel Rykert",
       "active": false,
       "role": "teacher"

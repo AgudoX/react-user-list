@@ -18,10 +18,7 @@ const UserEditForm = () => {
 		name,
 		role,
 		active,
-		setActive,
-		setRole,
-		setUsername,
-		setName,
+		dispatchUserFormValues,
 		isFormInvalid
 	} = useEditForm(currentUser);
 
@@ -49,7 +46,7 @@ const UserEditForm = () => {
 					placeholder='Brad Pitt'
 					error={name.error}
 					value={name.value}
-					onChange={ev => setName(ev.target.value)}
+					onChange={ev => dispatchUserFormValues({ type: 'name_changed', value: ev.target.value })}
 				></InputText>
 				<InputTextAsync
 					label='Username'
@@ -63,11 +60,15 @@ const UserEditForm = () => {
 					loading={username.loading}
 					error={username.error}
 					value={username.value}
-					onChange={ev => setUsername(ev.target.value)}
+					onChange={ev => dispatchUserFormValues({
+						type: 'username_changed',
+						value: ev.target.value,
+						currentUsername: currentUser.username
+					})}
 				></InputTextAsync>
 			</div>
 			<div className={style.row}>
-				<Select value={role} onChange={ev => setRole(ev.target.value)}>
+				<Select value={role} onChange={ev => dispatchUserFormValues({ type: 'role_changed', value: ev.target.value })}>
 					<option value={USER_ROLE.TEACHER}>Profesor</option>
 					<option value={USER_ROLE.STUDENT}>Alumno</option>
 					<option value={USER_ROLE.OTHER}>Otro</option>
@@ -75,7 +76,7 @@ const UserEditForm = () => {
 				<div className={style.active}>
 					<InputCheckbox
 						checked={active}
-						onChange={ev => setActive(ev.target.checked)}
+						onChange={ev => dispatchUserFormValues({ type: 'active_changed', value: ev.target.checked })}
 					/>
 					<span>¿Activo?</span>
 				</div>

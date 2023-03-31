@@ -52,7 +52,7 @@ const filtersReducer = (state, action) => {
 			}
 		}
 		case 'reset': {
-			return INITIAL_STATE
+			return { ...INITIAL_STATE } // Esto ha de ser una copia de INITIAL_STATE sino no se actualizarán los usuarios cuando se editen
 		}
 		default:
 			throw new Error('Invalid action type')
