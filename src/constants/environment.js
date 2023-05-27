@@ -1,3 +1,3 @@
 export const environment = {
-	apiUrl: 'https://shared-vivid-podium.glitch.me/users'
+	apiUrl: 'https://react-json-server.glitch.me/users'
 };
