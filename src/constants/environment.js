@@ -1,3 +1,3 @@
 export const environment = {
-    apiUrl: 'http://localhost:4000/users'
-}
+	apiUrl: 'https://shared-vivid-podium.glitch.me/users'
+};
