@@ -1,3 +1,4 @@
+import { FILTER_ACTIONS } from '../../constants/filterActions';
 import IconButton from '../buttons/IconButton';
 import ArrowLeftIcon from '../icons/ArrowLeftIcon';
 import ArrowRightIcon from '../icons/ArrowRightIcon';
@@ -10,7 +11,9 @@ const UserPagination = ({ page, dispatchFilters, totalPages }) => {
 				filled
 				icon={ArrowLeftIcon}
 				disabled={page <= 1 ? true : ''}
-				onClick={() => dispatchFilters({ type: 'page_changed', value: page - 1 })}
+				onClick={() =>
+					dispatchFilters({ type: FILTER_ACTIONS.PAGE, value: page - 1 })
+				}
 				className={style.icons}
 			/>
 			<span className={style.page}>
@@ -20,7 +23,9 @@ const UserPagination = ({ page, dispatchFilters, totalPages }) => {
 				filled
 				icon={ArrowRightIcon}
 				disabled={page >= totalPages || totalPages === 0 ? true : ''}
-				onClick={() => dispatchFilters({ type: 'page_changed', value: page + 1 })}
+				onClick={() =>
+					dispatchFilters({ type: FILTER_ACTIONS.PAGE, value: page + 1 })
+				}
 				className={style.icons}
 			/>
 		</div>
