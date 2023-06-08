@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react';
-import { EDIT_FORM_ACTIONS } from '../../constants/editFormActions';
 import { findUserByUsername } from '../api/usersApi';
-import { validateName, validateUsername } from '../users/userValidations';
+
+import { replace, usernameErrorChanged } from '../actions/editFormActions';
 import {
 	editFormReducer,
 	getEditFormInitialState
@@ -15,10 +15,7 @@ export const useEditForm = user => {
 	);
 
 	useEffect(() => {
-		dispatchUserFormValues({
-			type: EDIT_FORM_ACTIONS.REPLACE,
-			value: getEditFormInitialState(user)
-		});
+		dispatchUserFormValues(replace(getEditFormInitialState(user)));
 	}, [user]);
 
 	useEffect(() => {
@@ -69,14 +66,10 @@ const validateUsernameIsAvailable = async (
 	const { user, error, aborted } = await findUserByUsername(username, signal);
 
 	if (aborted) return;
-	if (error)
-		return dispatchUserFormValues({
-			type: EDIT_FORM_ACTIONS.USERNAME_ERROR,
-			value: 'Error al validar'
-		});
 
-	dispatchUserFormValues({
-		type: EDIT_FORM_ACTIONS.USERNAME_ERROR,
-		value: user ? 'Ya está en uso' : undefined
-	});
+	let errorMessage;
+	if (error) errorMessage = 'Error al validar';
+	else if (user) errorMessage = 'Ya está en uso';
+
+	dispatchUserFormValues(usernameErrorChanged(errorMessage));
 };

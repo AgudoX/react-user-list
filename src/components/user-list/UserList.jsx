@@ -3,7 +3,7 @@ import useUsers from '../../lib/hooks/useUsers';
 import UserFormProvider from '../providers/UsersFormProvider';
 import UserFormContainer from '../user-forms/UserFormContainer';
 
-import { FILTER_ACTIONS } from '../../constants/filterActions';
+import { reset } from '../../lib/actions/filterActions';
 import {
 	FILTERS_INITIAL_STATE,
 	filtersReducer
@@ -20,7 +20,6 @@ const UserList = () => {
 		FILTERS_INITIAL_STATE
 	);
 
-	console.log(filters);
 	const [showRowsFormat, setShowRowsFormat] = useState(true);
 
 	const { users, usersError, usersLoading, totalUsers } = useUsers(filters);
@@ -28,9 +27,7 @@ const UserList = () => {
 	return (
 		<div className={style.list}>
 			<h1 className={style.title}>Listado de Usuarios</h1>
-			<UserFormProvider
-				resetFilters={() => dispatchFilters({ type: FILTER_ACTIONS.RESET })}
-			>
+			<UserFormProvider resetFilters={() => dispatchFilters(reset())}>
 				{' '}
 				{/* Aquí en vez de hacer prop drilling pasamos directamente la ejecución de dispatch, de esta manera cuando se ejecute resetFilters en el UserForm Provider llevará a acabo esta acción directamente, si resetFilters en UserFormProvider recibiera un parámetro, para utilizarlo aquí, tendríamos que escribirlo entre los paréntesis  de la función que está inicializando la prop resetFilters aquí. */}
 				<UsersListFilters

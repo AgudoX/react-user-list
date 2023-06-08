@@ -1,7 +1,11 @@
 import { useContext } from 'react';
-import { FILTER_ACTIONS } from '../../constants/filterActions';
 import SORT_OPTIONS from '../../constants/sortOptions';
 import { USER_FORMS } from '../../constants/userForms';
+import {
+	onlyActiveChanged,
+	searchChanged,
+	sortByChanged
+} from '../../lib/actions/filterActions';
 import { UsersFormContext } from '../../lib/context/UsersFormContext';
 import InputCheckbox from '../Form/InputCheckbox';
 import InputSearch from '../Form/InputSearch';
@@ -20,20 +24,12 @@ const UsersListFilters = ({ search, onlyActive, sortBy, dispatchFilters }) => {
 					placeholder='Buscar...'
 					value={search}
 					onInput={ev => {
-						dispatchFilters({
-							type: FILTER_ACTIONS.SEARCH,
-							value: ev.target.value
-						});
+						dispatchFilters(searchChanged(ev.target.value));
 					}}
 				/>
 				<Select
 					value={sortBy}
-					onChange={ev =>
-						dispatchFilters({
-							type: FILTER_ACTIONS.SORT_BY,
-							value: Number(ev.target.value)
-						})
-					}
+					onChange={ev => dispatchFilters(sortByChanged(ev.target.value))}
 				>
 					<option value={SORT_OPTIONS.DEFAULT}>Por defecto</option>
 					<option value={SORT_OPTIONS.NAME}>Por nombre</option>
@@ -52,10 +48,7 @@ const UsersListFilters = ({ search, onlyActive, sortBy, dispatchFilters }) => {
 						checked={onlyActive}
 						className={style.checkbox}
 						onChange={ev =>
-							dispatchFilters({
-								type: FILTER_ACTIONS.ONLY_ACTIVE,
-								value: ev.target.checked
-							})
+							dispatchFilters(onlyActiveChanged(ev.target.checked))
 						}
 					/>
 					<p>Mostrar solo activos</p>
