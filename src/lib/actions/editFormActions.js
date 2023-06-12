@@ -27,7 +27,3 @@ export const usernameErrorChanged = usernameError => ({
 	type: EDIT_FORM_ACTIONS.USERNAME_ERROR,
 	payload: usernameError
 });
-export const replace = newState => ({
-	type: EDIT_FORM_ACTIONS.REPLACE,
-	payload: newState
-});

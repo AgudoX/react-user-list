@@ -4,40 +4,44 @@ import { UsersFormContext } from '../../lib/context/UsersFormContext';
 import Button from '../buttons/Button';
 import style from './UserDeleteForm.module.css';
 
-const UserDeleteForm = () => {
+const UserDeleteForm = ({ currentUser, closeModal }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const { currentUser, setFiltersForm, onSuccess } =
-		useContext(UsersFormContext);
+	const { onSuccess } = useContext(UsersFormContext);
 	return (
 		<form
+			className={style.form}
 			onSubmit={ev =>
-				handleSubmit(ev, currentUser.id, setIsSubmitting, onSuccess)
+				handleSubmit(ev, currentUser.id, setIsSubmitting, onSuccess, closeModal)
 			}
 		>
-			<p className={style.text}>
+			<p>
 				¿Estás seguro de que deseas eliminar al usuario {'"'}
 				{currentUser.name}
 				{'"'}?
 			</p>
-			<div className={style.row}>
-				<Button
-					disabled={isSubmitting}
-					kind='secondary'
-					type='submit'
-					onClick={setFiltersForm}
-				>
-					{isSubmitting ? 'Cargando...' : 'Cancelar'}
-				</Button>
-				<Button disabled={isSubmitting} type='submit'>
-					{isSubmitting ? 'Cargando...' : 'ELiminar usuario'}
-				</Button>
-			</div>
+			<Button
+				disabled={isSubmitting}
+				kind='secondary'
+				type='submit'
+				onClick={closeModal}
+			>
+				{isSubmitting ? 'Cargando...' : 'Cancelar'}
+			</Button>
+			<Button disabled={isSubmitting} type='submit'>
+				{isSubmitting ? 'Cargando...' : 'ELiminar usuario'}
+			</Button>
 		</form>
 	);
 };
 
 // Cuendo el handler de un evento aumenta mucho es mejor extraerlo y posteriormente pasarselo en forma de función.
-const handleSubmit = async (ev, userId, setIsSubmitting, onSuccess) => {
+const handleSubmit = async (
+	ev,
+	userId,
+	setIsSubmitting,
+	onSuccess,
+	closeModal
+) => {
 	ev.preventDefault();
 	setIsSubmitting(true);
 
@@ -45,6 +49,7 @@ const handleSubmit = async (ev, userId, setIsSubmitting, onSuccess) => {
 
 	if (deleteSuccessfully) {
 		onSuccess(); // Actualiza usuarios después de que se cree uno nuevo.
+		closeModal();
 	} else setIsSubmitting(false);
 };
 

@@ -1,9 +1,8 @@
 import { useReducer, useState } from 'react';
 import useUsers from '../../lib/hooks/useUsers';
-import UserFormProvider from '../providers/UsersFormProvider';
-import UserFormContainer from '../user-forms/UserFormContainer';
 
 import { reset } from '../../lib/actions/filterActions';
+import { UsersFormContext } from '../../lib/context/UsersFormContext';
 import {
 	FILTERS_INITIAL_STATE,
 	filtersReducer
@@ -27,7 +26,9 @@ const UserList = () => {
 	return (
 		<div className={style.list}>
 			<h1 className={style.title}>Listado de Usuarios</h1>
-			<UserFormProvider resetFilters={() => dispatchFilters(reset())}>
+			<UsersFormContext.Provider
+				value={{ onSucces: () => dispatchFilters(reset()) }}
+			>
 				{' '}
 				{/* Aquí en vez de hacer prop drilling pasamos directamente la ejecución de dispatch, de esta manera cuando se ejecute resetFilters en el UserForm Provider llevará a acabo esta acción directamente, si resetFilters en UserFormProvider recibiera un parámetro, para utilizarlo aquí, tendríamos que escribirlo entre los paréntesis  de la función que está inicializando la prop resetFilters aquí. */}
 				<UsersListFilters
@@ -36,7 +37,6 @@ const UserList = () => {
 					sortBy={filters.sortBy}
 					dispatchFilters={dispatchFilters}
 				/>
-				<UserFormContainer />
 				<UserListViewSelector
 					showRowsFormat={showRowsFormat}
 					setShowRowsFormat={setShowRowsFormat}
@@ -47,7 +47,7 @@ const UserList = () => {
 					loading={usersLoading}
 					view={showRowsFormat}
 				/>
-			</UserFormProvider>
+			</UsersFormContext.Provider>
 			<UserListPagination
 				page={filters.page}
 				itemsPerPage={filters.userPerPage}
