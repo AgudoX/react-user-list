@@ -27,7 +27,7 @@ const UserList = () => {
 		<div className={style.list}>
 			<h1 className={style.title}>Listado de Usuarios</h1>
 			<UsersFormContext.Provider
-				value={{ onSucces: () => dispatchFilters(reset()) }}
+				value={{ onSuccess: () => dispatchFilters(reset()) }}
 			>
 				{' '}
 				{/* Aquí en vez de hacer prop drilling pasamos directamente la ejecución de dispatch, de esta manera cuando se ejecute resetFilters en el UserForm Provider llevará a acabo esta acción directamente, si resetFilters en UserFormProvider recibiera un parámetro, para utilizarlo aquí, tendríamos que escribirlo entre los paréntesis  de la función que está inicializando la prop resetFilters aquí. */}

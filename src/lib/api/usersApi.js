@@ -1,5 +1,5 @@
-import { environment } from "../../constants/environment";
-import SORT_OPTIONS from "../../constants/sortOptions";
+import { environment } from '../../constants/environment';
+import SORT_OPTIONS from '../../constants/sortOptions';
 
 export const createUser = async user => {
 	try {
@@ -33,6 +33,22 @@ export const updateUser = async user => {
 	}
 };
 
+export const updateUserPic = async (userId, picture) => {
+	try {
+		const res = await fetch(`${environment.apiUrl}/${userId}`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ picture }) // Convertimos user en un JSON
+		});
+
+		return res.ok;
+	} catch {
+		return false;
+	}
+};
+
 export const deleteUserById = async userId => {
 	try {
 		const res = await fetch(`${environment.apiUrl}/${userId}`, {
@@ -49,12 +65,12 @@ const SORT_MAPPER = {
 	[SORT_OPTIONS.NAME]: ['name', 'asc'],
 	[SORT_OPTIONS.ROLE]: ['role', 'desc'],
 	[SORT_OPTIONS.ACTIVE]: ['active', 'desc']
-}
+};
 
 const getFindAllUrl = ({ page, userPerPage, search, onlyActive, sortBy }) => {
 	const url = new URL(environment.apiUrl);
-	url.searchParams.append('_page', page) // Le pasamos los query params de la url, en este caso _page = page
-	url.searchParams.append('_limit', userPerPage) // El resultado final de la constante url es este http://localhost:4000/users?_page=${page}&_limit=${userPerPage}
+	url.searchParams.append('_page', page); // Le pasamos los query params de la url, en este caso _page = page
+	url.searchParams.append('_limit', userPerPage); // El resultado final de la constante url es este http://localhost:4000/users?_page=${page}&_limit=${userPerPage}
 
 	// Si existen search o anlyActive añade los filtros a la URL
 	if (search) url.searchParams.append('name_like', search);
@@ -63,22 +79,18 @@ const getFindAllUrl = ({ page, userPerPage, search, onlyActive, sortBy }) => {
 	const sortProps = SORT_MAPPER[sortBy];
 
 	if (sortProps) {
-		const [sort, order] = sortProps
+		const [sort, order] = sortProps;
 		url.searchParams.append('_sort', sort);
 		url.searchParams.append('_order', order);
 	}
 	return url.href;
-}
+};
 
 export const findAllUsers = async (signal, filters) => {
-
-	const url = getFindAllUrl(filters)
+	const url = getFindAllUrl(filters);
 
 	try {
-		const response = await fetch(
-			url,
-			{ signal }
-		);
+		const response = await fetch(url, { signal });
 
 		let users;
 		if (response.ok) users = await response.json();
