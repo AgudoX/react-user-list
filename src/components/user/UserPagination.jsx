@@ -1,4 +1,3 @@
-import { FILTER_ACTIONS } from '../../constants/filterActions';
 import { pageChanged } from '../../lib/actions/filterActions';
 import IconButton from '../buttons/IconButton';
 import ArrowLeftIcon from '../icons/ArrowLeftIcon';
@@ -12,9 +11,7 @@ const UserPagination = ({ page, dispatchFilters, totalPages }) => {
 				filled
 				icon={ArrowLeftIcon}
 				disabled={page <= 1 ? true : ''}
-				onClick={() =>
-					dispatchFilters({ type: FILTER_ACTIONS.PAGE, value: page - 1 })
-				}
+				onClick={() => dispatchFilters(pageChanged(page - 1))}
 				className={style.icons}
 			/>
 			<span className={style.page}>

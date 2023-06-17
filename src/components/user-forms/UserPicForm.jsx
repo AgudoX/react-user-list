@@ -1,6 +1,7 @@
 import { useContext, useRef, useState } from 'react';
 import { updateUserPic } from '../../lib/api/usersApi';
 import { UsersFormContext } from '../../lib/context/UsersFormContext';
+import { alertBox } from '../../lib/events/alertEvents';
 import { fileToDataUrl } from '../../lib/utils/file-utils';
 import Button from '../buttons/Button';
 import IconButton from '../buttons/IconButton';
@@ -110,10 +111,9 @@ const updatePic = async (
 
 	if (success) {
 		onSuccess();
-		closeModal();
-	} else {
-		setIsSubmitting(false);
-	}
+		alertBox.success('Imagen modificada correctamente');
+	} else alertBox.error('Error al modificar la imagen');
+	closeModal();
 };
 
 export default UserPicForm;

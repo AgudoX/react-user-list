@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { deleteUserById } from '../../lib/api/usersApi';
 import { UsersFormContext } from '../../lib/context/UsersFormContext';
+import { alertBox } from '../../lib/events/alertEvents';
 import Button from '../buttons/Button';
 import style from './UserDeleteForm.module.css';
 
@@ -49,8 +50,9 @@ const handleSubmit = async (
 
 	if (deleteSuccessfully) {
 		onSuccess(); // Actualiza usuarios después de que se cree uno nuevo.
-		closeModal();
-	} else setIsSubmitting(false);
+		alertBox.success('Usuario borrado correctamente');
+	} else alertBox.error('Error al borrar usuario');
+	closeModal();
 };
 
 export default UserDeleteForm;

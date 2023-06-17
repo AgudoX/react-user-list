@@ -8,6 +8,7 @@ import {
 } from '../../lib/actions/editFormActions';
 import { updateUser } from '../../lib/api/usersApi';
 import { UsersFormContext } from '../../lib/context/UsersFormContext';
+import { alertBox } from '../../lib/events/alertEvents';
 import { useEditForm } from '../../lib/hooks/useEditForm';
 import InputCheckbox from '../Form/InputCheckbox';
 import InputText from '../Form/InputText';
@@ -111,8 +112,9 @@ const handleSubmit = async (
 
 	if (postSuccessfully) {
 		onSuccess(); // Actualiza usuarios después de que se cree uno nuevo.
-		closeModal();
-	} else setIsSubmitting(false);
+		alertBox.success('Usuario modificado correctamente');
+	} else alertBox.error('Error al modificar el usuario');
+	closeModal();
 };
 
 export default UserEditForm;
